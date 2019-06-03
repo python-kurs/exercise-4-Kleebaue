@@ -110,5 +110,5 @@ create_climate_diagram(garmisch, temp_col=" TMK", prec_col=" RSK",
                        filename = output_dir / "agg_clim_garmisch_2018.png")
 
 create_climate_diagram(zugspitze,temp_col=" TMK", prec_col=" RSK",
-                       title="aggregated temperature & precipitation",
+                       title="aggregated temperature & precipitation zugspitze",
                        filename = output_dir / "agg_clim_zugspitze_2018.png" )
