@@ -22,9 +22,9 @@ zugs = pd.read_csv(data_dir / "produkt_klima_tag_20171010_20190412_05792.txt", s
 garmisch  = garm["2018"] 
 zugspitze = zugs["2018"] 
 
-# Resample the temperature data to monthly averages (" TMK") and store them in simple lists: [1P]
-garmisch_agg = list(garmisch.loc[:," TMK"].resample("1M").agg(["mean"])["mean"])
-zugspitze_agg = list(zugspitze.loc[:," TMK"].resample("1M").agg(["mean"])["mean"])
+# Resample the temperature data to monthly averages (" TMK") and the precipitation data to monthly sums (" RSK"): [1P]
+garmisch_agg = garmisch.loc[:, [" TMK", " RSK"]].resample("1M").agg({" TMK": "mean", " RSK": "sum"})
+zugspitze_agg = zugspitze.loc[:, [" TMK", " RSK"]].resample("1M").agg({" TMK": "mean", " RSK": "sum"})
 
 # Define a plotting function that draws a simple climate diagram
 # Add the arguments as mentioned in the docstring below [1P]
@@ -68,7 +68,7 @@ def create_climate_diagram(df,
     
     """
     dfAgg = df.loc[:,[temp_col,prec_col]].resample("1M").agg({temp_col:"mean",prec_col:"sum"})
-    fig = plt.figure(figsize=(10,8))
+    fig = plt.figure(figsize = (10,8))
     plt.rcParams['font.size'] = 16
 
     ax2 = fig.add_subplot(111)
@@ -85,16 +85,16 @@ def create_climate_diagram(df,
     ax1.xaxis.set_major_formatter(monthFmt)
     ax2.xaxis.set_major_formatter(monthFmt)
 
-    ax1.plot(dfAgg[temp_col],color="red",label="temperature")
-    ax2.bar(dfAgg.index,height=dfAgg[prec_col],color="blue",width=20,label="precipitation")
+    ax1.plot(dfAgg[temp_col],color="red",label="Temperature")
+    ax2.bar(dfAgg.index,height=dfAgg[prec_col],color="blue",width=20,label="Precipitation")
 
     # Set appropiate limits to each y-axis using the function arguments: [1P]
     ax1.set_ylim(temp_min,temp_max)
     ax2.set_ylim(prec_min,prec_max)
     
     # Set appropiate labels to each y-axis: [1P]
-    ax1.set_ylabel("Temperature in °C")
-    ax2.set_ylabel("Precipitation in mm")
+    ax1.set_ylabel("Temperature [°C]")
+    ax2.set_ylabel("Precipitation [mm]")
 
     # Give your diagram the title from the passed arguments: [1P]
     plt.title(title)
@@ -106,9 +106,9 @@ def create_climate_diagram(df,
 # Use this function to draw a climate diagram for 2018 for 
 # both stations and save the result: [1P]
 create_climate_diagram(garmisch, temp_col=" TMK", prec_col=" RSK",
-                       title="aggregated temperature & precipitation garmisch 2018",
+                       title="Garmisch",
                        filename = output_dir / "agg_clim_garmisch_2018.png")
 
 create_climate_diagram(zugspitze,temp_col=" TMK", prec_col=" RSK",
-                       title="aggregated temperature & precipitation zugspitze",
+                       title="Zugspitze",
                        filename = output_dir / "agg_clim_zugspitze_2018.png" )
